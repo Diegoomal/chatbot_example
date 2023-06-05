@@ -1,4 +1,6 @@
+import pickle
 import numpy as np
+from tensorflow.keras.models import load_model
 from tensorflow.keras import utils, layers, activations, models, preprocessing
 
 class Test_Chatbot:
@@ -9,37 +11,26 @@ class Test_Chatbot:
 
     def test_example(self):
 
-        def str_to_tokens(sentence : str):
-            words = sentence.lower().split()
-            tokens_list = list()
-            for word in words:
-                tokens_list.append(tokenizer.word_index[word]) 
-            return preprocessing.sequence.pad_sequences([tokens_list],
-                                                        maxlen=maxlen_questions,
-                                                        padding='post')
+        print('\n')
 
-        enc_model, dec_model = make_inference_models()
+        encoder_input_data = None
+        with open('src/artifacts/encoder_input_data.pkl', 'rb') as file:
+            encoder_input_data = pickle.load(file)
 
-        for _ in range(10):
-            states_values = enc_model.predict(str_to_tokens(input('Enter question: ')))
-            empty_target_seq = np.zeros((1, 1))
-            empty_target_seq[0, 0] = tokenizer.word_index['start']
-            stop_condition = False
-            decoded_translation = ''
-            while not stop_condition :
-                dec_outputs, h, c = dec_model.predict([empty_target_seq] + states_values)
-                sampled_word_index = np.argmax( dec_outputs[0, -1, :] )
-                sampled_word = None
-                for word, index in tokenizer.word_index.items():
-                    if sampled_word_index == index:
-                        decoded_translation += ' {}'.format(word)
-                        sampled_word = word
-                
-                if sampled_word == 'end' or len(decoded_translation.split()) > maxlen_answers:
-                    stop_condition = True
-                    
-                empty_target_seq = np.zeros((1, 1))  
-                empty_target_seq[0, 0] = sampled_word_index
-                states_values = [h, c] 
+        print(f'encoder_input_data.shape: {encoder_input_data.shape}')
 
-            print(decoded_translation)
+        decoder_input_data = None
+        with open('src/artifacts/decoder_input_data.pkl', 'rb') as file:
+            decoder_input_data = pickle.load(file)
+
+        print(f'decoder_input_data.shape: {decoder_input_data.shape}')
+
+        decoder_output_data = None
+        with open('src/artifacts/decoder_output_data.pkl', 'rb') as file:
+            decoder_output_data = pickle.load(file)
+
+        print(f'decoder_output_data.shape: {decoder_output_data.shape}')
+
+        model = load_model('src/artifacts/trained_model.h5')
+
+        print('\n')

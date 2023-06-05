@@ -19,4 +19,4 @@ rm -rf src/dataset
 
 rm -rf docs
 
-rm -rf tests/__pycache__
+rm -rf test/__pycache__

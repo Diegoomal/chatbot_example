@@ -128,17 +128,6 @@ decoder_output_data = np.array(onehot_answers)
 
 print(f'decoder_output_data.shape: {decoder_output_data.shape}')
 
-"""D) Save itens"""
-
-with open('src/artifacts/encoder_input_data.pkl', 'wb') as file:
-    pickle.dump(encoder_input_data, file)
-
-with open('src/artifacts/decoder_input_data.pkl', 'wb') as file:
-    pickle.dump(decoder_input_data, file)
-
-with open('src/artifacts/decoder_output_data.pkl', 'wb') as file:
-    pickle.dump(decoder_output_data, file)
-
 """3) Defining the Encoder-Decoder model"""
 
 encoder_inputs = tf.keras.layers.Input(shape=(maxlen_questions, ))
@@ -216,10 +205,10 @@ for _ in range(10):
             if sampled_word_index == index:
                 decoded_translation += ' {}'.format(word)
                 sampled_word = word
-
+        
         if sampled_word == 'end' or len(decoded_translation.split()) > maxlen_answers:
             stop_condition = True
-
+            
         empty_target_seq = np.zeros((1, 1))  
         empty_target_seq[0, 0] = sampled_word_index
         states_values = [h, c] 
