@@ -12,8 +12,10 @@ rm -rf __pycache__
 rm -rf .pytest_cache
 
 rm -rf src/__pycache__
-rm -rf src/chatbot_nlp
-rm -rf src/chatbot_nlp.zip
+rm -rf src/artifacts/trained_model.h5
+rm -rf src/artifacts/enc_model.tflite
+rm -rf src/artifacts/dec_model.tflite
+rm -rf src/dataset
 
 rm -rf docs
 

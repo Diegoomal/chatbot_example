@@ -21,7 +21,7 @@ from tensorflow.keras import utils, layers, activations, models, preprocessing
 
 """B) Reading the data from the files"""
 
-dir_path = 'src/chatbot_nlp/data/'
+dir_path = 'src/dataset/chatbot_nlp/data/'
 files_list = os.listdir(dir_path + os.sep)
 
 questions = list()
@@ -139,7 +139,7 @@ model.fit(
     decoder_output_data,
     batch_size=50,
     epochs=150)
-model.save('src/trained_model.h5')
+model.save('src/artifacts/trained_model.h5')
 
 """5) Defining inference models"""
 
@@ -183,7 +183,7 @@ for _ in range(10):
     decoded_translation = ''
     while not stop_condition :
         dec_outputs, h, c = dec_model.predict([empty_target_seq] + states_values)
-        sampled_word_index = np.argmax( dec_outputs[0, -1, :] )
+        sampled_word_index = np.argmax(dec_outputs[0, -1, :])
         sampled_word = None
         for word, index in tokenizer.word_index.items():
             if sampled_word_index == index:
@@ -205,7 +205,7 @@ for _ in range(10):
 
 converter = tf.lite.TFLiteConverter.from_keras_model(enc_model)
 buffer = converter.convert()
-open('src/enc_model.tflite', 'wb').write(buffer)
+open('src/artifacts/enc_model.tflite', 'wb').write(buffer)
 
 converter = tf.lite.TFLiteConverter.from_keras_model(dec_model)
-open('src/dec_model.tflite', 'wb').write(buffer)
+open('src/artifacts/dec_model.tflite', 'wb').write(buffer)
